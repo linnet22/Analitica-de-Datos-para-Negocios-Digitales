@@ -1,0 +1,2048 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/30/2025 4:02:20 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="MSI"
+  DTS:CreatorName="MSI\linnr"
+  DTS:DTSID="{F172FC8C-E0BA-4166-9257-08F4D3E12058}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5685.0"
+  DTS:LocaleID="21514"
+  DTS:ObjectName="04_Datamart_Dim_Tiempo"
+  DTS:PackageType="5"
+  DTS:VersionBuild="3"
+  DTS:VersionGUID="{6F4AAD2A-49D6-45A2-8C24-AEB0320E30E2}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.datamart_northwind]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{B3604B1A-FF9E-4DC3-9720-C4A1B32ADFF3}"
+      DTS:ObjectName="LocalHost.datamart_northwind">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=.;Initial Catalog=datamart_northwind;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-04_Datamart_Dim_Tiempo-{B3604B1A-FF9E-4DC3-9720-C4A1B32ADFF3}LocalHost.datamart_northwind;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.stage_northwind]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{A2F2878D-B948-4E10-9A83-72ED8A290C79}"
+      DTS:ObjectName="LocalHost.stage_northwind">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=.;Initial Catalog=stage_northwind;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-04_Datamart_Dim_Tiempo-{A2F2878D-B948-4E10-9A83-72ED8A290C79}LocalHost.stage_northwind;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\CARGA_DIM TIEMPO"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{46D365EA-04A8-4F3B-AD9B-1B2C669EFD1C}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="CARGA_DIM TIEMPO"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\CARGA_DIM TIEMPO\Conditional Split"
+              componentClassID="Microsoft.ConditionalSplit"
+              contactInfo="Conditional Split;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Routes data rows to different outputs depending on the content of the data. Use conditions (SSIS expressions) to specify which rows are routed. For example, separate records that need to be cleaned from those that are ready to be loaded or route only a subset of records."
+              name="Conditional Split"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\CARGA_DIM TIEMPO\Conditional Split.Inputs[Conditional Split Input]"
+                  description="Input to the Conditional Split Transformation"
+                  name="Conditional Split Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\Conditional Split.Inputs[Conditional Split Input].Columns[tiempo_fechaActual(DimTiempo)]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="tiempo_fechaActual(DimTiempo)"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_fechaActual(DimTiempo)]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\Conditional Split.Outputs[TIEMPO_NUEVO]"
+                  description="Output 1 of the Conditional Split Transformation"
+                  errorOrTruncationOperation="Computation"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="TIEMPO_NUEVO"
+                  synchronousInputId="Package\CARGA_DIM TIEMPO\Conditional Split.Inputs[Conditional Split Input]"
+                  truncationRowDisposition="FailComponent">
+                  <properties>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the expression. This expression version uses lineage identifiers instead of column names."
+                      name="Expression">[ISNULL](#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_fechaActual(DimTiempo)]})</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the friendly version of the expression. This expression version uses column names."
+                      expressionType="Notify"
+                      name="FriendlyExpression">ISNULL([tiempo_fechaActual(DimTiempo)])</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the position of the condition in the list of conditions that the transformation evaluates. The evaluation order is from the lowest to the highest value."
+                      name="EvaluationOrder">0</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\Conditional Split.Outputs[Conditional Split Default Output]"
+                  description="Default Output of the Conditional Split Transformation"
+                  exclusionGroup="1"
+                  name="Conditional Split Default Output"
+                  synchronousInputId="Package\CARGA_DIM TIEMPO\Conditional Split.Inputs[Conditional Split Input]">
+                  <properties>
+                    <property
+                      dataType="System.Boolean"
+                      name="IsDefaultOut">true</property>
+                  </properties>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\Conditional Split.Outputs[Conditional Split Error Output]"
+                  description="Error Output of the Conditional Split Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Conditional Split Error Output"
+                  synchronousInputId="Package\CARGA_DIM TIEMPO\Conditional Split.Inputs[Conditional Split Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\Conditional Split.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\Conditional Split.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\Conditional Split.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\Conditional Split.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="DATA MART DIM TIEMPO"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[dim_tiempo]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.datamart_northwind]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.datamart_northwind]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_SKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_SKey]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_SKey]"
+                      name="tiempo_SKey"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_fechaActual]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_fechaActual]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_fechaActual]"
+                      name="tiempo_fechaActual"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_anio]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_anio]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_anio]"
+                      name="tiempo_anio"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_trimestre]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_trimestre]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_trimestre]"
+                      name="tiempo_trimestre"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_mes]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_mes]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_mes]"
+                      name="tiempo_mes"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_semana]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_semana]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_semana]"
+                      name="tiempo_semana"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diadeanio]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_diadeanio]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diadeanio]"
+                      name="tiempo_diadeanio"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diademes]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_diademes]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diademes]"
+                      name="tiempo_diademes"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diasemana]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_diasemana]"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diasemana]"
+                      name="tiempo_diasemana"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_SKey]"
+                      dataType="i4"
+                      name="tiempo_SKey" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_fechaActual]"
+                      dataType="dbTimeStamp"
+                      name="tiempo_fechaActual" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_anio]"
+                      dataType="i4"
+                      name="tiempo_anio" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_trimestre]"
+                      dataType="i4"
+                      name="tiempo_trimestre" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_mes]"
+                      dataType="i4"
+                      name="tiempo_mes" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_semana]"
+                      dataType="i4"
+                      name="tiempo_semana" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_diadeanio]"
+                      dataType="i4"
+                      name="tiempo_diadeanio" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_diademes]"
+                      dataType="i4"
+                      name="tiempo_diademes" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[tiempo_diasemana]"
+                      dataType="i4"
+                      name="tiempo_diasemana" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_SKey]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_SKey]"
+                      name="tiempo_SKey" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_fechaActual]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_fechaActual]"
+                      name="tiempo_fechaActual" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_anio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_anio]"
+                      name="tiempo_anio" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_trimestre]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_trimestre]"
+                      name="tiempo_trimestre" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_mes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_mes]"
+                      name="tiempo_mes" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_semana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_semana]"
+                      name="tiempo_semana" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_diadeanio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_diadeanio]"
+                      name="tiempo_diadeanio" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_diademes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_diademes]"
+                      name="tiempo_diademes" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_diasemana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[tiempo_diasemana]"
+                      name="tiempo_diasemana" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART"
+              componentClassID="Microsoft.MergeJoin"
+              contactInfo="Merge Join;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Combine two sorted data flows into one using the FULL, LEFT, or INNER join. We recommend this transformation when data flows can be sorted at their sources."
+              name="LEFT JOIN STAGE TIEMPO DATAMART"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of join to perform."
+                  name="JoinType"
+                  typeConverter="JoinType">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the number of columns in the ordering key."
+                  name="NumKeyColumns">1</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the null values are treated as equal values."
+                  name="TreatNullsAsEqual">true</property>
+                <property
+                  dataType="System.Int32"
+                  description="Indicates the requested maximum buffers per input before blocking."
+                  name="MaxBuffersPerInput">5</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input]"
+                  hasSideEffects="true"
+                  name="Merge Join Left Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_FechaActual]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="Tiempo_FechaActual"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_FechaActual]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_Anio]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Anio"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Anio]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_Trimestre]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Trimestre"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Trimestre]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_Mes]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Mes"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Mes]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_Semana]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Semana"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Semana]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_DiaDeAnio]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeAnio"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeAnio]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_DiaDeMes]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeMes"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeMes]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_DiaDeSemana]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeSemana"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeSemana]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+                <input
+                  refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input]"
+                  hasSideEffects="true"
+                  name="Merge Join Right Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_fechaActual]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="tiempo_fechaActual"
+                      cachedSortKeyPosition="1"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_fechaActual]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_anio]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_anio"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_anio]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_trimestre]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_trimestre"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_trimestre]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_mes]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_mes"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_mes]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_semana]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_semana"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_semana]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_diadeanio]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_diadeanio"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diadeanio]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_diademes]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_diademes"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diademes]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_diasemana]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_diasemana"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diasemana]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output]"
+                  isSorted="true"
+                  name="Merge Join Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_FechaActual]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_FechaActual]"
+                      name="Tiempo_FechaActual"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_FechaActual]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Anio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Anio]"
+                      name="Tiempo_Anio">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_Anio]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Trimestre]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Trimestre]"
+                      name="Tiempo_Trimestre">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_Trimestre]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Mes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Mes]"
+                      name="Tiempo_Mes">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_Mes]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Semana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Semana]"
+                      name="Tiempo_Semana">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_Semana]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeAnio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeAnio]"
+                      name="Tiempo_DiaDeAnio">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_DiaDeAnio]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeMes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeMes]"
+                      name="Tiempo_DiaDeMes">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_DiaDeMes]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeSemana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeSemana]"
+                      name="Tiempo_DiaDeSemana">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input].Columns[Tiempo_DiaDeSemana]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_fechaActual(DimTiempo)]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_fechaActual(DimTiempo)]"
+                      name="tiempo_fechaActual(DimTiempo)">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_fechaActual]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_anio(DimTiempo)]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_anio(DimTiempo)]"
+                      name="tiempo_anio(DimTiempo)">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_anio]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_trimestre(DimTiempo)]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_trimestre(DimTiempo)]"
+                      name="tiempo_trimestre(DimTiempo)">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_trimestre]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_mes(DimTiempo)]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_mes(DimTiempo)]"
+                      name="tiempo_mes(DimTiempo)">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_mes]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_semana(DimTiempo)]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_semana(DimTiempo)]"
+                      name="tiempo_semana(DimTiempo)">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_semana]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_diadeanio(DimTiempo)]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_diadeanio(DimTiempo)]"
+                      name="tiempo_diadeanio(DimTiempo)">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_diadeanio]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_diademes(DimTiempo)]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_diademes(DimTiempo)]"
+                      name="tiempo_diademes(DimTiempo)">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_diademes]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_diasemana(DimTiempo)]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[tiempo_diasemana(DimTiempo)]"
+                      name="tiempo_diasemana(DimTiempo)">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="The input column associated with this output column"
+                          name="InputColumnID">#{Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input].Columns[tiempo_diasemana]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\CARGA_DIM TIEMPO\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[dim_tiempo]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.datamart_northwind]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.datamart_northwind]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Tiempo_FechaActual]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="Tiempo_FechaActual"
+                      cachedSortKeyPosition="1"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_fechaActual]"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_FechaActual]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Tiempo_Anio]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Anio"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_anio]"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Anio]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Tiempo_Trimestre]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Trimestre"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_trimestre]"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Trimestre]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Tiempo_Mes]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Mes"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_mes]"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Mes]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Tiempo_Semana]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Semana"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_semana]"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_Semana]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Tiempo_DiaDeAnio]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeAnio"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_diadeanio]"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeAnio]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Tiempo_DiaDeMes]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeMes"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_diademes]"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeMes]" />
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Tiempo_DiaDeSemana]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeSemana"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_diasemana]"
+                      lineageId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output].Columns[Tiempo_DiaDeSemana]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_SKey]"
+                      dataType="i4"
+                      name="tiempo_SKey" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_fechaActual]"
+                      dataType="dbTimeStamp"
+                      name="tiempo_fechaActual" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_anio]"
+                      dataType="i4"
+                      name="tiempo_anio" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_trimestre]"
+                      dataType="i4"
+                      name="tiempo_trimestre" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_mes]"
+                      dataType="i4"
+                      name="tiempo_mes" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_semana]"
+                      dataType="i4"
+                      name="tiempo_semana" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_diadeanio]"
+                      dataType="i4"
+                      name="tiempo_diadeanio" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_diademes]"
+                      dataType="i4"
+                      name="tiempo_diademes" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[tiempo_diasemana]"
+                      dataType="i4"
+                      name="tiempo_diasemana" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Sort;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Sorts input data in ascending or descending order when it cannot be sorted at its source. For example, sort sales data by 'customer id' before it is written to a flat file and delivered to another department. Note: We do not recommend this transformation for large data flows."
+              name="ORDENAR DATAMART DIM TIEMPO"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the Sort transformation removes rows with duplicate sort values."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the maximum number of threads to use for sorting."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input]"
+                  name="Sort Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_SKey]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_SKey"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_SKey]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_fechaActual]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="tiempo_fechaActual"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_fechaActual]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_anio]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_anio"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_anio]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_trimestre]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_trimestre"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_trimestre]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_mes]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_mes"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_mes]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_semana]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_semana"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_semana]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_diadeanio]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_diadeanio"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diadeanio]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_diademes]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_diademes"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diademes]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input].Columns[tiempo_diasemana]"
+                      cachedDataType="i4"
+                      cachedName="tiempo_diasemana"
+                      lineageId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diasemana]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output]"
+                  isSorted="true"
+                  name="Sort Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_SKey]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_SKey]"
+                      name="tiempo_SKey">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_SKey]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_fechaActual]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_fechaActual]"
+                      name="tiempo_fechaActual"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_fechaActual]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_anio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_anio]"
+                      name="tiempo_anio">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_anio]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_trimestre]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_trimestre]"
+                      name="tiempo_trimestre">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_trimestre]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_mes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_mes]"
+                      name="tiempo_mes">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_mes]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_semana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_semana]"
+                      name="tiempo_semana">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_semana]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diadeanio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diadeanio]"
+                      name="tiempo_diadeanio">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diadeanio]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diademes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diademes]"
+                      name="tiempo_diademes">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diademes]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diasemana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output].Columns[tiempo_diasemana]"
+                      name="tiempo_diasemana">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output].Columns[tiempo_diasemana]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO"
+              componentClassID="Microsoft.Sort"
+              contactInfo="Sort;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Sorts input data in ascending or descending order when it cannot be sorted at its source. For example, sort sales data by 'customer id' before it is written to a flat file and delivered to another department. Note: We do not recommend this transformation for large data flows."
+              name="ORDENAR STAGE TIEMPO"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the Sort transformation removes rows with duplicate sort values."
+                  name="EliminateDuplicates">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the maximum number of threads to use for sorting."
+                  expressionType="Notify"
+                  name="MaximumThreads">-1</property>
+              </properties>
+              <inputs>
+                <input
+                  refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input]"
+                  name="Sort Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input].Columns[Tiempo_FechaActual]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="Tiempo_FechaActual"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_FechaActual]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">1</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input].Columns[Tiempo_Anio]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Anio"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Anio]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input].Columns[Tiempo_Trimestre]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Trimestre"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Trimestre]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input].Columns[Tiempo_Mes]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Mes"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Mes]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input].Columns[Tiempo_Semana]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_Semana"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Semana]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input].Columns[Tiempo_DiaDeAnio]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeAnio"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeAnio]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input].Columns[Tiempo_DiaDeMes]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeMes"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeMes]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                    <inputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input].Columns[Tiempo_DiaDeSemana]"
+                      cachedDataType="i4"
+                      cachedName="Tiempo_DiaDeSemana"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeSemana]">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the comparison options for character data."
+                          name="NewComparisonFlags">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the sort order of the column."
+                          name="NewSortKeyPosition">0</property>
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output]"
+                  isSorted="true"
+                  name="Sort Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_FechaActual]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_FechaActual]"
+                      name="Tiempo_FechaActual"
+                      sortKeyPosition="1">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_FechaActual]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Anio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Anio]"
+                      name="Tiempo_Anio">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Anio]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Trimestre]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Trimestre]"
+                      name="Tiempo_Trimestre">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Trimestre]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Mes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Mes]"
+                      name="Tiempo_Mes">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Mes]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Semana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_Semana]"
+                      name="Tiempo_Semana">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Semana]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeAnio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeAnio]"
+                      name="Tiempo_DiaDeAnio">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeAnio]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeMes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeMes]"
+                      name="Tiempo_DiaDeMes">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeMes]}</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeSemana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output].Columns[Tiempo_DiaDeSemana]"
+                      name="Tiempo_DiaDeSemana">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the lineage identifier of the input column that is associated with this output column."
+                          name="SortColumnId">#{Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeSemana]}</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="STAGE TIEMPO"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select st.Tiempo_FechaActual, st.Tiempo_Anio, st.Tiempo_Trimestre,
+st.Tiempo_Mes,st.Tiempo_Semana,st.Tiempo_DiaDeAnio,
+st.Tiempo_DiaDeMes, st.Tiempo_DiaDeSemana
+from stage_northwind.dbo.Stage_Tiempo as st;</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.stage_northwind]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.stage_northwind]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_FechaActual]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_FechaActual]"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_FechaActual]"
+                      name="Tiempo_FechaActual"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Anio]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_Anio]"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Anio]"
+                      name="Tiempo_Anio"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Trimestre]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_Trimestre]"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Trimestre]"
+                      name="Tiempo_Trimestre"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Mes]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_Mes]"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Mes]"
+                      name="Tiempo_Mes"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Semana]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_Semana]"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_Semana]"
+                      name="Tiempo_Semana"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeAnio]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_DiaDeAnio]"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeAnio]"
+                      name="Tiempo_DiaDeAnio"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeMes]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_DiaDeMes]"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeMes]"
+                      name="Tiempo_DiaDeMes"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeSemana]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_DiaDeSemana]"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].Columns[Tiempo_DiaDeSemana]"
+                      name="Tiempo_DiaDeSemana"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_FechaActual]"
+                      dataType="dbTimeStamp"
+                      name="Tiempo_FechaActual" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_Anio]"
+                      dataType="i4"
+                      name="Tiempo_Anio" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_Trimestre]"
+                      dataType="i4"
+                      name="Tiempo_Trimestre" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_Mes]"
+                      dataType="i4"
+                      name="Tiempo_Mes" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_Semana]"
+                      dataType="i4"
+                      name="Tiempo_Semana" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_DiaDeAnio]"
+                      dataType="i4"
+                      name="Tiempo_DiaDeAnio" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_DiaDeMes]"
+                      dataType="i4"
+                      name="Tiempo_DiaDeMes" />
+                    <externalMetadataColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output].ExternalColumns[Tiempo_DiaDeSemana]"
+                      dataType="i4"
+                      name="Tiempo_DiaDeSemana" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_FechaActual]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_FechaActual]"
+                      name="Tiempo_FechaActual" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_Anio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_Anio]"
+                      name="Tiempo_Anio" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_Trimestre]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_Trimestre]"
+                      name="Tiempo_Trimestre" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_Mes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_Mes]"
+                      name="Tiempo_Mes" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_Semana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_Semana]"
+                      name="Tiempo_Semana" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_DiaDeAnio]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_DiaDeAnio]"
+                      name="Tiempo_DiaDeAnio" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_DiaDeMes]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_DiaDeMes]"
+                      name="Tiempo_DiaDeMes" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_DiaDeSemana]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[Tiempo_DiaDeSemana]"
+                      name="Tiempo_DiaDeSemana" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\CARGA_DIM TIEMPO.Paths[Merge Join Output]"
+              endId="Package\CARGA_DIM TIEMPO\Conditional Split.Inputs[Conditional Split Input]"
+              name="Merge Join Output"
+              startId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Outputs[Merge Join Output]" />
+            <path
+              refId="Package\CARGA_DIM TIEMPO.Paths[OLE DB Source Output]"
+              endId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Inputs[Sort Input]"
+              name="OLE DB Source Output"
+              startId="Package\CARGA_DIM TIEMPO\STAGE TIEMPO.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\CARGA_DIM TIEMPO.Paths[OLE DB Source Output1]"
+              endId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Inputs[Sort Input]"
+              name="OLE DB Source Output"
+              startId="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\CARGA_DIM TIEMPO.Paths[Sort Output]"
+              endId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Left Input]"
+              name="Sort Output"
+              startId="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO.Outputs[Sort Output]" />
+            <path
+              refId="Package\CARGA_DIM TIEMPO.Paths[Sort Output1]"
+              endId="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART.Inputs[Merge Join Right Input]"
+              name="Sort Output"
+              startId="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO.Outputs[Sort Output]" />
+            <path
+              refId="Package\CARGA_DIM TIEMPO.Paths[TIEMPO_NUEVO]"
+              endId="Package\CARGA_DIM TIEMPO\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="TIEMPO_NUEVO"
+              startId="Package\CARGA_DIM TIEMPO\Conditional Split.Outputs[TIEMPO_NUEVO]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--Esta sección CDATA contiene la información de diseño del paquete. Esta sección incluye información como, por ejemplo, las coordenadas (x,y), el ancho y el alto.-->
+<!--Si edita manualmente esta sección y comete un error, puede eliminarlo. -->
+<!--El paquete podrá cargarse normalmente, pero se perderá la información de diseño anterior y el diseñador reorganizará los elementos automáticamente en la superficie de diseño.-->
+<Objects
+  Version="8">
+  <!--Cada uno de los nodos siguientes contiene propiedades que no afectan al comportamiento en tiempo de ejecución.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="186.666666666667,42.6666666666667"
+          Id="Package\CARGA_DIM TIEMPO"
+          TopLeft="446.249980051071,92.3684200384446" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\CARGA_DIM TIEMPO">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="160,42.6666666666667"
+          Id="Package\CARGA_DIM TIEMPO\STAGE TIEMPO"
+          TopLeft="279.374987510965,107.421051452117" />
+        <NodeLayout
+          Size="206.666666666667,42.6666666666667"
+          Id="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO"
+          TopLeft="528.124976390974,92.3684200384446" />
+        <NodeLayout
+          Size="216,42.6666666666667"
+          Id="Package\CARGA_DIM TIEMPO\ORDENAR STAGE TIEMPO"
+          TopLeft="315.624985890464,192.263155783725" />
+        <NodeLayout
+          Size="260,42.6666666666667"
+          Id="Package\CARGA_DIM TIEMPO\ORDENAR DATAMART DIM TIEMPO"
+          TopLeft="583.749973904342,192.263155783725" />
+        <EdgeLayout
+          Id="Package\CARGA_DIM TIEMPO.Paths[OLE DB Source Output]"
+          TopLeft="359.374987510965,150.087718118784">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="64.2499983794988,42.1754376649417"
+              Start="0,0"
+              End="64.2499983794988,34.6754376649417">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.0877188324708" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,17.0877188324708"
+                    Point2="0,21.0877188324708"
+                    Point3="4,21.0877188324708" />
+                  <mssgle:LineSegment
+                    End="60.2499983794988,21.0877188324708" />
+                  <mssgle:CubicBezierSegment
+                    Point1="60.2499983794988,21.0877188324708"
+                    Point2="64.2499983794988,21.0877188324708"
+                    Point3="64.2499983794988,25.0877188324708" />
+                  <mssgle:LineSegment
+                    End="64.2499983794988,34.6754376649417" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\CARGA_DIM TIEMPO.Paths[OLE DB Source Output1]"
+          TopLeft="631.458309724307,135.035086705111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="82.2916641800352,57.2280690786141"
+              Start="0,0"
+              End="82.2916641800352,49.7280690786141">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6140345393071" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6140345393071"
+                    Point2="0,28.6140345393071"
+                    Point3="4,28.6140345393071" />
+                  <mssgle:LineSegment
+                    End="78.2916641800352,28.6140345393071" />
+                  <mssgle:CubicBezierSegment
+                    Point1="78.2916641800352,28.6140345393071"
+                    Point2="82.2916641800352,28.6140345393071"
+                    Point3="82.2916641800352,32.6140345393071" />
+                  <mssgle:LineSegment
+                    End="82.2916641800352,49.7280690786141" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="277.333333333334,42.6666666666667"
+          Id="Package\CARGA_DIM TIEMPO\LEFT JOIN STAGE TIEMPO DATAMART"
+          TopLeft="437.499980442227,298.315786198236" />
+        <EdgeLayout
+          Id="Package\CARGA_DIM TIEMPO.Paths[Sort Output]"
+          TopLeft="423.624985890464,234.929822450392">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="107.652772329541,63.3859637478438"
+              Start="0,0"
+              End="107.652772329541,55.8859637478438">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.8134238801669" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,33.8134238801669"
+                    Point2="0,37.8134238801669"
+                    Point3="4,37.8134238801669" />
+                  <mssgle:LineSegment
+                    End="103.652772329541,37.8134238801669" />
+                  <mssgle:CubicBezierSegment
+                    Point1="103.652772329541,37.8134238801669"
+                    Point2="107.652772329541,37.8134238801669"
+                    Point3="107.652772329541,41.8134238801669" />
+                  <mssgle:LineSegment
+                    End="107.652772329541,55.8859637478438" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\CARGA_DIM TIEMPO.Paths[Sort Output1]"
+          TopLeft="713.749973904342,234.929822450392">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-92.6944379065602,63.3859637478438"
+              Start="0,0"
+              End="-92.6944379065602,55.8859637478438">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.8134238801669" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,33.8134238801669"
+                    Point2="0,37.8134238801669"
+                    Point3="-4,37.8134238801669" />
+                  <mssgle:LineSegment
+                    End="-88.6944379065602,37.8134238801669" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-88.6944379065602,37.8134238801669"
+                    Point2="-92.6944379065602,37.8134238801669"
+                    Point3="-92.6944379065602,41.8134238801669" />
+                  <mssgle:LineSegment
+                    End="-92.6944379065602,55.8859637478438" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="157.333333333334,42.6666666666667"
+          Id="Package\CARGA_DIM TIEMPO\Conditional Split"
+          TopLeft="495.624977843837,366.035083707625" />
+        <EdgeLayout
+          Id="Package\CARGA_DIM TIEMPO.Paths[Merge Join Output]"
+          TopLeft="575.229145809698,340.982452864903">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,25.0526308427227"
+              Start="0,0"
+              End="0,17.5526308427227">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.5526308427227" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="174.666666666667,42"
+          Id="Package\CARGA_DIM TIEMPO\OLE DB Destination"
+          TopLeft="493.749977927656,439.263153071714" />
+        <EdgeLayout
+          Id="Package\CARGA_DIM TIEMPO.Paths[TIEMPO_NUEVO]"
+          TopLeft="577.687477885746,408.701750374292">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,30.5614026974221"
+              Start="0,0"
+              End="0,23.0614026974221">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.0614026974221" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-37.25390625,6.08734197371103,74.5078125,10.88671875"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\CARGA_DIM TIEMPO\STAGE TIEMPO">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\CARGA_DIM TIEMPO\DATA MART DIM TIEMPO">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\CARGA_DIM TIEMPO\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
